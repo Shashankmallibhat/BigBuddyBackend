@@ -116,11 +116,11 @@ class ClassRoomDetailView(APIView):
         if classRoom.values('usercode')[0]['usercode'] == request.data.get('usercode') and request.data.get('usercode') == request.user.usercode:
             response = requests.delete('http://127.0.0.1:8000/student/class',data=classroomcode)
             if response.status_code == 200:
-                return Response(response)
+                pass
             else:
                 return Response(response)
-            # classRoom.delete()
-            # return Response('Class deleted successfully',status=status.HTTP_200_OK)
+            classRoom.delete()
+            return Response('Class deleted successfully',status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
