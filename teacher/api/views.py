@@ -37,7 +37,7 @@ class ClassRoomListView(APIView):
             studentData['classCode'] = data['classCode']
             for email in request.data.get('studentList').split(','):
                 studentData['email'] = email
-                response = requests.post('http://127.0.0.1:8000/student/class/',data=studentData)
+                response = requests.post('http://api.bigbuddy.in/student/class/',data=studentData)
                 if response.status_code == 201:
                     pass
                 else:
@@ -110,19 +110,22 @@ class ClassRoomDetailView(APIView):
     def delete(self,request,className):
         classroomcode = request.data.get('classCode')
         try:
-            classRoom = ClassRoom.objects.filter(classCode = classroomcode)
-        except:
-            return Response('Classroom not Found!!',status=status.HTTP_400_NOT_FOUND)
-        if classRoom.values('usercode')[0]['usercode'] == request.data.get('usercode') and request.data.get('usercode') == request.user.usercode:
-            response = requests.delete('http://127.0.0.1:8000/student/class',data=classroomcode)
-            if response.status_code == 200:
-                pass
-            else:
-                return Response(response)
-            classRoom.delete()
-            return Response('Class deleted successfully',status=status.HTTP_200_OK)
+            classRoom = ClassRoom.objects.get(classCode = classroomcode)
+        except ClassRoom.DoesNotExist:
+            return Response('Classroom not Found!!',status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            if classRoom.usercode == request.data.get('usercode') and request.data.get('usercode') == request.user.usercode:
+                data={}
+                data["classCode"] = classroomcode
+                response = requests.delete('http://api.bigbuddy.in/student/class/',data=data)
+                if response.status_code == 200:
+                    pass
+                else:
+                    return Response(response)
+                classRoom.delete()
+                return Response('Class deleted successfully',status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
         
 class ClassNotesView(APIView):
     permission_classes =  [IsAuthenticated]

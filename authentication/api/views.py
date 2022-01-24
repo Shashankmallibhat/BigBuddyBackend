@@ -23,7 +23,7 @@ class SignUPView(APIView):
             userData['username'] = serializer.data['username']
             userData['email'] = serializer.data['email']
             userData['role'] = serializer.data['role']
-            response = requests.post('http://127.0.0.1:8000/auth/profile/',data=userData)
+            response = requests.post('http://api.bigbuddy.in/auth/profile/',data=userData)
             if response.status_code == 200:
                 account = serializer.save()
                 userData['Response'] = "Registration Successful"
@@ -36,7 +36,7 @@ class SignUPView(APIView):
                         studentData = {}
                         studentData['email'] = userData['email']
                         studentData['usercode'] = account.usercode
-                        res = requests.put('http://127.0.0.1:8000/student/class/',data=studentData)
+                        res = requests.put('http://api.bigbuddy.in/student/class/',data=studentData)
                         if res.status_code == 200:
                             response_2 = Response(userData)
                         else:

@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'lk0qpbbdf-b_lecqj#$33@_@o#r_!)!mtb@xap)xb$%*25kaq6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -138,9 +138,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-        # 'DEFAULT_RENDERER_CLASSES': (
-        #     'rest_framework.renderers.JSONRenderer',
-        # )
+        'DEFAULT_RENDERER_CLASSES': (
+            'rest_framework.renderers.JSONRenderer',
+        )
 }
 
 MANGO_JWT_SETTINGS = {
