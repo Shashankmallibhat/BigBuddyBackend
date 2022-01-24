@@ -103,7 +103,7 @@ class SignINView(APIView):
             response.set_cookie('usercode',data['usercode'])
         else:
             data['Response'] = 'Credentials are not matching'
-            response = Response(data)
+            response = Response(data,status=status.HTTP_401_UNAUTHORIZED)
         return response
         
             
