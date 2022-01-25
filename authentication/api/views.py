@@ -98,6 +98,7 @@ class SignINView(APIView):
             data['token'] = token
             data['Response'] = 'Login Successful'
             data['usercode'] = user.usercode
+            data['role'] = user.role
             response = Response(data)
             response.set_cookie('token',token)
             response.set_cookie('usercode',data['usercode'])
