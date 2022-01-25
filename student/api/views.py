@@ -46,11 +46,13 @@ class StudentClassesView(APIView):
     def put(self,request):
         data = {}
         data['usercode'] = request.data.get('usercode')
-        data['email'] =  request.data.get('email')
-        if StudentClasses.objects.filter(email=data['email']).update(usercode=data['usercode']):
-            return Response(status=status.HTTP_200_OK)
+        data['email'] =  request.data.get('email') 
+        try:
+            StudentClasses.objects.filter(email=data['email']).update(usercode=data['usercode'])
+        except StudentClasses.DoesNotExist:
+            return Response(status=status.HTTP_100_CONTINUE)
         else:
-            return Response("Try some time later",status==status.HTTP_500_INTERNAL_SERVER_ERROR) 
+            return Response(status=status.HTTP_200_OK)
         
     def delete(self,request):
         classroomcode = request.data.get('classCode')

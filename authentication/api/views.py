@@ -38,12 +38,13 @@ class SignUPView(APIView):
                         studentData['usercode'] = account.usercode
                         res = requests.put('http://api.bigbuddy.in/student/class/',data=studentData)
                         if res.status_code == 200:
-                            response_2 = Response(userData)
+                            return Response(userData)
                         else:
-                            response_2 = Response(res)
+                            return Response(res)
+                return Response(userData)
             else:
                 response_2 = Response(response)
-            return response_2
+                return response_2
         else:
             return Response(serializer.errors)
             
