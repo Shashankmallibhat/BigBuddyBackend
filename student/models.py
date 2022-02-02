@@ -9,3 +9,7 @@ class StudentClasses(models.Model):
     classCode = models.CharField(max_length=50)
     
     
+class StudentWishlist(models.Model):
+    email = models.EmailField()
+    usercode = models.CharField(max_length=50,null=True)
+    classCode = models.CharField(max_length=50)
