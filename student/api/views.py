@@ -4,8 +4,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from student.api.serializers import StudentClassSerializer
-from student.models import StudentClasses
+from student.api.serializers import StudentClassSerializer, StudentWishlistSerializer
+from student.models import StudentClasses, StudentWishlist
 from teacher.api.serializers import ClassRoomSerializer
 from teacher.models import ClassRoom
 
@@ -61,14 +61,61 @@ class StudentClassesView(APIView):
             if req == 'student':
                 email = request.data.get('email')
                 try:
-                    student = StudentClasses.objects.filter(email = email).filter(classCode = classroomcode)
+                    studentClass = StudentClasses.objects.filter(email = email).filter(classCode = classroomcode)
                 except StudentClasses.DoesNotExist:
                     return Response("Student is not there in this class")
                 else:
-                    student.delete()
+                    studentClass.delete()
                     return Response('Deleted Successfully!!', status=status.HTTP_200_OK)
         else:
             if StudentClasses.objects.filter(classCode = classroomcode).delete():
+                return Response('Deleted Successfully!!', status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
+            
+class StudentWishlistView(APIView):
+    def get(self,request):
+        usercode = self.request.headers['usercode']
+        data={}
+        try:
+            classroomcodes = StudentWishlist.objects.filter(usercode = usercode)
+        except:
+            return Response("No classes in your Wishlist!!")
+        i=1
+        for code in classroomcodes.values('classCode'):
+            classroom = ClassRoom.objects.get(classCode = code["classCode"])
+            serializer = ClassRoomSerializer(classroom)
+            data['class '+str(i)] = serializer.data
+            i+=1
+        return Response(data)
+    
+    def post(self,request):
+        data = {}
+        data['email'] = request.data.get('email')
+        data['classCode'] =  request.data.get('classCode')
+        data['usercode'] = request.data.get('usercode')
+        serializer = StudentWishlistSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self,request):
+        classroomcode = request.data.get('classCode')
+        if request.data.get('req'):
+            req = request.data.get('req')
+            if req == 'student':
+                email = request.data.get('email')
+                try:
+                    studentWishlistClass = StudentWishlist.objects.filter(email = email).filter(classCode = classroomcode)
+                except StudentWishlist.DoesNotExist:
+                    return Response("Student is not there in this class")
+                else:
+                    studentWishlistClass.delete()
+                    return Response("Class has been removed from your wishlist")
+        else:
+            if StudentWishlist.objects.filter(classCode = classroomcode).delete():
                 return Response('Deleted Successfully!!', status=status.HTTP_200_OK)
             else:
                 return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
