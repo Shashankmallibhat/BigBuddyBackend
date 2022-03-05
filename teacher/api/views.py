@@ -37,7 +37,7 @@ class ClassRoomListView(APIView):
             studentData['classCode'] = data['classCode']
             for email in request.data.get('studentList').split(','):
                 studentData['email'] = email
-                response = requests.post('http://127.0.0.1:8000/student/class/',data=studentData)
+                response = requests.post('http://api.bigbuddy.in/student/class/',data=studentData)
                 if response.status_code == 201:
                     pass
                 else:
@@ -117,8 +117,8 @@ class ClassRoomDetailView(APIView):
             if classRoom.usercode == request.data.get('usercode') and request.data.get('usercode') == request.user.usercode:
                 data={}
                 data["classCode"] = classroomcode
-                response_1 = requests.delete('http://127.0.0.1:8000/student/class/',data=data)
-                response_2 = requests.delete('http://127.0.0.1:8000/student/wishlist/',data=data)
+                response_1 = requests.delete('http://api.bigbuddy.in/student/class/',data=data)
+                response_2 = requests.delete('http://api.bigbuddy.in/student/wishlist/',data=data)
                 if response_1.status_code == 200 and response_2.status_code == 200:
                     pass
                 elif response_1.status_code != 200:
