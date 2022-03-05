@@ -28,7 +28,7 @@ KEY = os.environ.get('KEY') #can remove this || was used for environment variabl
 SECRET_KEY = 'lk0qpbbdf-b_lecqj#$33@_@o#r_!)!mtb@xap)xb$%*25kaq6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
